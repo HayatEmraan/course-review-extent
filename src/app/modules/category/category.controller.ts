@@ -18,21 +18,13 @@ const getCategories: RequestHandler = async (req, res) => {
   })
 }
 
-
-
-
 const updateReview: RequestHandler = async (req, res) => {
   return globalResponseSend(res, {
     status: 200,
     message: 'Review updated successfully',
-    data: await ReviewService.updateReview(req.params.courseId, req.body),
+    data: [],
   })
 }
-
-
-
-
-
 
 export const CategoryController = {
   createCategory,

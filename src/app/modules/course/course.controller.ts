@@ -2,6 +2,8 @@ import { RequestHandler } from 'express'
 import { globalResponseSend } from '../../utils/globalResponseSend'
 import { CourseService } from './course.service'
 
+
+// Single Course Routes Controller
 const createCourse: RequestHandler = async (req, res) => {
   return globalResponseSend(res, {
     status: 201,
@@ -10,6 +12,11 @@ const createCourse: RequestHandler = async (req, res) => {
   })
 }
 
+
+
+
+
+// Courses Routes Controller
 const getCourses: RequestHandler = async (req, res) => {
   return globalResponseSend(res, {
     status: 200,
@@ -17,6 +24,9 @@ const getCourses: RequestHandler = async (req, res) => {
     data: await CourseService.getCourses(),
   })
 }
+
+
+
 
 export const CourseController = {
   createCourse,
