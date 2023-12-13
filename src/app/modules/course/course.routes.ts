@@ -10,5 +10,5 @@ CourseRoutes.get('/best', CourseController.getCourses)
 export const CoursesRoutes = Router()
 
 CoursesRoutes.get('/', CourseController.getCourses)
-CoursesRoutes.put('/:courseId', CourseController.getCourses)
-CoursesRoutes.put('/:courseId/reviews', CourseController.getCourses)
+CoursesRoutes.put('/:courseId', CourseController.updateCourse)
+CoursesRoutes.get('/:courseId/reviews', CourseController.courseWithReviews)

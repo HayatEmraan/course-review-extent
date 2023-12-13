@@ -1,6 +1,7 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import { router } from './app/routes/routes'
+import { globalErrorHandler } from './app/errors/globalErrorHandler'
 const app: Application = express()
 
 // middleware
@@ -19,5 +20,7 @@ app.all('*', (req, res) => {
     message: `Can't find ${req.originalUrl} on this server!`,
   })
 })
+
+app.use(globalErrorHandler)
 
 export default app

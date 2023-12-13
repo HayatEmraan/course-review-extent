@@ -14,7 +14,7 @@ const TagSchema = new Schema(
   },
   {
     versionKey: false,
-    _id: true,
+    _id: false,
   },
 )
 
@@ -31,7 +31,7 @@ const DetailSchema = new Schema(
   },
   {
     versionKey: false,
-    _id: true,
+    _id: false,
   },
 )
 

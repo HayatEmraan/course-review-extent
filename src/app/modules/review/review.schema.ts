@@ -14,6 +14,9 @@ const ReviewSchema = new Schema<TReview>({
     type: String,
     required: true,
   },
+}, {
+  versionKey: false,
+  timestamps: true,
 })
 
 export const ReviewModel = model<TReview>('Review', ReviewSchema)
