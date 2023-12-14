@@ -31,6 +31,8 @@ const getCourses = async (query: Record<string, unknown>) => {
     sortBy,
     minPrice,
     maxPrice,
+    startDate,
+    endDate,
   } = query
   const filterQuery: Record<string, unknown> = {}
 
@@ -51,24 +53,36 @@ const getCourses = async (query: Record<string, unknown>) => {
   }
 
   let mainQuery = CourseModel.find(filterQuery)
-  // .sort([['createdAt', (sortOrder as any) || 'asc']])
 
   if (minPrice && maxPrice) {
     mainQuery = mainQuery.find({
       price: { $gte: minPrice, $lte: maxPrice },
     })
   }
-  if (sortBy && sortOrder) {
-    mainQuery = mainQuery
-      .sort(sortBy as any)
-      .sort([['createdAt', (sortOrder as any) || 'asc']])
-  } else {
-    mainQuery = mainQuery.sort([['createdAt', 'desc']])
+  if (startDate && endDate) {
+    mainQuery = mainQuery.find({
+      $and: [
+        { startDate: { $gte: startDate } },
+        { endDate: { $lte: endDate } },
+      ],
+    })
   }
+
+  mainQuery = mainQuery.sort([
+    [(sortBy as any) || 'createdAt', (sortOrder as any) || 'asc'],
+  ])
 
   const pageCount = (page as number) || 1 - 1
   const limitCount = (limit as number) || 10
-  return await mainQuery.limit(limitCount).skip(pageCount * limitCount)
+
+  return {
+    meta: {
+      page: pageCount + 1,
+      limit: limitCount,
+      total: await CourseModel.estimatedDocumentCount(),
+    },
+    data: await mainQuery.limit(limitCount).skip(pageCount * limitCount),
+  }
 }
 
 const updateACourse = async (id: string, payload: Partial<TCourse>) => {
