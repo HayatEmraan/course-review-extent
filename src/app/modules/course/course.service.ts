@@ -77,8 +77,8 @@ const getCourses = async (query: Record<string, unknown>) => {
 
   return {
     meta: {
-      page: pageCount + 1,
-      limit: limitCount,
+      page: parseInt(page as string || '1'),
+      limit: parseInt(limit as string || '10'),
       total: await CourseModel.estimatedDocumentCount(),
     },
     data: await mainQuery.limit(limitCount).skip(pageCount * limitCount),
