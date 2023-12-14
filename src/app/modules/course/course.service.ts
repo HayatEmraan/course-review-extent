@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose'
 import { ReviewModel } from '../review/review.schema'
 import { detailsConst, durationCourse } from './course.constant'
@@ -17,8 +18,57 @@ const createCourse = async (payload: TCourse) => {
 }
 
 // todo
-const getCourses = async () => {
-  return CourseModel.find({})
+const getCourses = async (query: Record<string, unknown>) => {
+  const {
+    page,
+    limit,
+    language,
+    provider,
+    durationInWeeks,
+    level,
+    tags,
+    sortOrder,
+    sortBy,
+    minPrice,
+    maxPrice,
+  } = query
+  const filterQuery: Record<string, unknown> = {}
+
+  if (language) {
+    filterQuery['language'] = language
+  }
+  if (provider) {
+    filterQuery['provider'] = provider
+  }
+  if (durationInWeeks) {
+    filterQuery['durationInWeeks'] = durationInWeeks
+  }
+  if (level) {
+    filterQuery['details.level'] = level
+  }
+  if (tags) {
+    filterQuery['tags.name'] = tags
+  }
+
+  let mainQuery = CourseModel.find(filterQuery)
+  // .sort([['createdAt', (sortOrder as any) || 'asc']])
+
+  if (minPrice && maxPrice) {
+    mainQuery = mainQuery.find({
+      price: { $gte: minPrice, $lte: maxPrice },
+    })
+  }
+  if (sortBy && sortOrder) {
+    mainQuery = mainQuery
+      .sort(sortBy as any)
+      .sort([['createdAt', (sortOrder as any) || 'asc']])
+  } else {
+    mainQuery = mainQuery.sort([['createdAt', 'desc']])
+  }
+
+  const pageCount = (page as number) || 1 - 1
+  const limitCount = (limit as number) || 10
+  return await mainQuery.limit(limitCount).skip(pageCount * limitCount)
 }
 
 const updateACourse = async (id: string, payload: Partial<TCourse>) => {

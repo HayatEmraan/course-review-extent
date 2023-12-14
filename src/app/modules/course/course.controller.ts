@@ -34,7 +34,7 @@ const getCourses: RequestHandler = catchAsync(async (req, res) => {
   return globalResponseSend(res, {
     status: 200,
     message: 'Courses retrieved successfully',
-    data: await CourseService.getCourses(),
+    data: await CourseService.getCourses(req.query),
   })
 })
 const updateCourse: RequestHandler = catchAsync(async (req, res) => {
